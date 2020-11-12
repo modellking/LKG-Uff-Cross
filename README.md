@@ -2,9 +2,9 @@
 A DMX-to-SK6812 Controller written in C++ using Arduino
 
 ## Features
-various Effects,
-Multi-color support,
-8-channel controlability (even with the specific dirt cheap and not user friendly dmx-panal we use)
+- 6 Effects,
+- Multi-color (default: 4-color) support,
+- 8-channel controlability (even with the specific dirt cheap and not user friendly dmx-panal we use)
 
 ## To set up:
 ### Hardware:
@@ -29,6 +29,9 @@ https://github.com/espressif/arduino-esp32
 
 ## Thanks to
 uses in adapted form
+
 https://github.com/luksal/ESP32-DMX-RX
+
 https://github.com/gitpeut/SK6812-RGBW-ESP32
+
 https://github.com/ratkins/RGBConverter
