@@ -9,8 +9,8 @@ A DMX-to-SK6812 Controller written in C++ using Arduino
 ## To set up:
 ### Hardware:
 #### You need:
-ESP-32 (a version you can program with the Arduino IDE ensures compatibility, should be possible to archieve by other means, but then you wouldn't be here)
-MAX-485
+- ESP-32 (I used the Dev-Module)
+- MAX-485
 
 #### Setup:
 1. Connect the DMX D+ / D- / Ground to the MAX-485 A / B / Ground (if D+ / D- to A / B get mixed up try the other way around)
