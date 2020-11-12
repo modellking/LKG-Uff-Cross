@@ -35,3 +35,8 @@ https://github.com/luksal/ESP32-DMX-RX
 https://github.com/gitpeut/SK6812-RGBW-ESP32
 
 https://github.com/ratkins/RGBConverter
+
+## Project Background
+
+This project serves to allow me to learn a little C++ and handling an embedded Environment (well using Arduino at least)
+It might be possible to achieve the same result with an Arduino Nano or other weaker chips, but between timing issues and a deadline I was happy to jump in the ESP-32 wagon and use existing libraries to manage my interfaces. Besides: 10 Bucks is not certainly not breaking the bank compared to saved development (time) costs.
