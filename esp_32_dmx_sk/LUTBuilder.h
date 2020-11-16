@@ -1,54 +1,54 @@
+#ifndef LUTB_H
+#define LUTB_H 1
+
+#include <deque>
+
 class LUTBuilder {
   public:
-  LUTBuilder(int maxsize) {
-    _lut = int[maxsize];
-    _length = maxsize
+  int start, end;
+  std::deque<int> lut;
+
+  void addDescriptor(int descriptor[], int sstart = 0, int eend = -1) {
+    int descLen = sizeof(descriptor) / sizeof(descriptor[0]);
+    if (eend == -1) eend = descLen;
+    prepFor(sstart,eend);
+    for (int i = start; i < end; i++)
+      if (i < descLen)
+        lut[i] = descriptor[i];
+  }
+  
+  void addDescriptor(int (*descriptor)(int), int sstart = -1, int eend = -1) {
+    if (sstart == -1) sstart = start;
+    if (eend == -1) eend = end;
+    prepFor(sstart,eend);
+    for (int i = sstart; i < eend; i++) lut[i] = descriptor(i);
+  }
+  
+  void addDescriptor(LUTBuilder * descriptor, int sstart = -1, int eend = -1) {
+    if (sstart == -1) sstart = descriptor->start;
+    if (eend = -1) eend = descriptor->end;
+    prepFor(sstart, eend);
+    for (int i = descriptor->start; i < descriptor->end; i++) lut[i] = descriptor[i];
+  }
+  
+  LUTBuilder operator+(LUTBuilder other) {addDescriptor(other);}
+  
+  int& operator [] (int i) {return i < end && i > start ? lut[i] : 0;}
+  int operator [] (int i) const {return i < end && i > start ? lut[i] : 0;}
+  int size() {
+    return lut.size();
   }
 
-  void addDescriptor(int[] descriptor, int start = 0, int end = -1) {
-    if (end == -1) {
-      end = descriptor.length;
-    }
-    if (end > _length) {
-      end = _length;
-    }
-    for (int i = start; i < end; i++) {
-      _lut[i] = descriptor[i];
-    }
+  private:
+  void prepFor(int sstart, int eend) {
+    int enddiff = this.end - eend;
+    if (enddiff < 0) this.end = eend;
+    for (int i = enddiff; i < 0 ; i++) lut.push_back(0);
+    
+    int startdiff = this.start - sstart;
+    if (startdiff > 0) this.start = sstart;
+    for (int i = startdiff; i > 0; i--) lut.push_front(0);
   }
-  
-  void addDescriptor(int (*descriptor)(int), int start = 0, int end) {
-    if (end > _length) {
-      end = _length;
-    }
-    for (int i = start; i < end; i++) {
-      _lut[i] = descriptor(i);
-    }
-  }
-  
-  void addDescriptor(LUTBuilder * descriptor, int start = 0, int end = -1) {
-    if (end == -1) {
-      end = descriptor.length;
-    }
-    if (end > _length) {
-      end = _length;
-    }
-    for (int i = start; i < end; i++) {
-      _lut[i] = descriptor[i];
-    }
-  }
-  
-  LUTBuilder operator+(LUTBuilder other) {
-    addDescriptor(other, 0, other.length);
-  }
-  
-  int operator[](int i) {
-    return i < _length ? _lut[i] : 0;
-  }
-  
-  int[] asArray() {
-    return _lut;
-  }
-  int _length;
-  int[] _lut;
 };
+
+#endif

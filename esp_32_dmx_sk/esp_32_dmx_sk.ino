@@ -1,8 +1,10 @@
 #include "sk.h"
 #include "dmx.h"
 #include "Color.h"
+#include "LUTBuilder.h"
+#include "shape.h"
 
-#define DMX_START_ADDRESS 1//33 // (1 indexed)
+#define DMX_START_ADDRESS 1//41 // (1 indexed)
 #define POLLRATE 30 // polltime
 
 #define LED_COUNT 324
@@ -49,7 +51,7 @@ void setup() {
 void noop() {}
 
 void (*effects[])(void) = { // todo: fade/strobe, Directions
-  full, simple_snakes, hue_rotate, noop, noop, noop, sparkle, fire, full
+  full, simple_snakes, hue_rotate, inOut, noop, noop, sparkle, fire
 };
 
 int readcycle = 0;
