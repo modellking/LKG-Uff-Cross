@@ -57,6 +57,7 @@ int writecycle = 0;
 
 bool lock_update = false;
 byte last_raw_col_slot = 0;
+byte last_raw_effect = 0;
 
 void loop() {
   unsigned long rdiff = millis() - readcycle;
@@ -68,24 +69,28 @@ void loop() {
     if(DMX::IsHealthy())
     {
       byte raw_col_slot = DMX::Read(DMX_START_ADDRESS+7);
-      if (raw_col_slot != 255 && last_raw_col_slot == 255) {
+      byte raw_effect = DMX::Read(DMX_START_ADDRESS+4);
+      if (raw_effect != 255 && last_raw_effect == 255) {
         lock_update ^= true; // Flip on falling edge (so the correct slot is selected when unlocking)
       }
+
+      last_raw_effect = raw_effect;
       
-      if (lock_update || raw_col_slot == 255) { // Keep locked also during HIGH to prevent the col_slot = 255 set right before the lock
+      if (lock_update || raw_effect == 255) { // Keep locked also during HIGH to prevent the col_slot = 255 set right before the lock
 
       } else {
         if (raw_col_slot == 0) // reset all color slots when col slot is low
           for (int i = 1; i < 4; i++)
             color_slots[i] = Color::getBlack();
-        
-        color_slot = segb(raw_col_slot, COLOR_SLOT_COUNT);
-        color_slots[color_slot].r = DMX::Read(DMX_START_ADDRESS);
-        color_slots[color_slot].g = DMX::Read(DMX_START_ADDRESS+1);
-        color_slots[color_slot].b = DMX::Read(DMX_START_ADDRESS+2);
-        color_slots[color_slot].w = DMX::Read(DMX_START_ADDRESS+3);
-  
-        effect = segb(DMX::Read(DMX_START_ADDRESS+4), sizeof(effects) / sizeof(effects[0]));
+
+        if (raw_col_slot != 255) {
+          color_slot = segb(raw_col_slot, COLOR_SLOT_COUNT);
+          color_slots[color_slot].r = DMX::Read(DMX_START_ADDRESS);
+          color_slots[color_slot].g = DMX::Read(DMX_START_ADDRESS+1);
+          color_slots[color_slot].b = DMX::Read(DMX_START_ADDRESS+2);
+          color_slots[color_slot].w = DMX::Read(DMX_START_ADDRESS+3);
+        }
+        effect = segb(raw_effect, sizeof(effects) / sizeof(effects[0]));
         timescale = timescale_lookup(DMX::Read(DMX_START_ADDRESS+5));
         
         argument_slots[color_slot] = DMX::Read(DMX_START_ADDRESS+6);
@@ -111,5 +116,4 @@ void loop() {
     }
     effects[effect]();
   }
-  // Debug    last_debug_request = Serial.readStringUntil('\n');
 }
