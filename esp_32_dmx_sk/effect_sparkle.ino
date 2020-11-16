@@ -36,7 +36,7 @@ void sparkle() {
     );
     
   // Decay sparkleFades
-    int attemptedSet = sparkleFades[i] - 12 * timescale; // decay per ~16 ms
+    int attemptedSet = sparkleFades[i] - 12 * abs(timescale); // decay per ~16 ms
     sparkleFades[i] = attemptedSet < 0 ? 0 : attemptedSet;
   }
   
