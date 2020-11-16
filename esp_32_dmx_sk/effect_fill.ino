@@ -3,11 +3,11 @@ void full() {
 }
 
 void fill_rgbw(RGBW rgbw) {
-  fill_rgbw_up_to(rgbw, LED_COUNT);
+  fill_rgbw_between(rgbw, 0, LED_COUNT);
 }
 
-void fill_rgbw_up_to(RGBW rgbw, int limit) {
-  for (int i = 0; i < limit; i++) {
+void fill_rgbw_between(RGBW rgbw, int start, int limit) {
+  for (int i = start; i < limit; i++) {
     strip.color32(i,Color::rgbwToBits(rgbw));
   }
 }
