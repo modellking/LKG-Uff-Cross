@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <title>LKG-Uff-Cross Setup Tool</title>
     <link rel="stylesheet" href="waterize_dark.css">
+    <style>
+        path {
+            stroke:rgb(0,0,0);
+            stroke-width:1;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: #00000011;
+        }
+        path.selected {
+            stroke:rgb(255,0,0);
+            stroke-width:1;
+        }
+    </style>
 </head>
 <body>
 <h2>Welcome to the setup tool!</h2>
@@ -47,6 +60,17 @@
     <input type="range" id="T_DEADZONE_SIZE" name="T_DEADZONE_SIZE" min="1" max="50" value="5">
 
     <label>Shape</label>
+    <div>
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%"
+         viewBox="-50 -50 100 100" xml:space="preserve" id="svg_cross">
+        <path class="cross_path not-selected" d=""/>
+        <path class="cross_path selected" d=""/>
+        <foreignObject x="10" y="10" width="100" height="150">
+              <div xmlns="http://www.w3.org/1999/xhtml">
+              </div>
+        </foreignObject>
+    </svg>
+    </div>
 
     <label for="SHds">down</label>
     <input type="number" id="SHds" name="SHds" min="0" value="6">
@@ -69,8 +93,89 @@
 </form>
 <script src="FileSaver.js"></script>
 <script>
-    function getAsInt(fData, key) {return Number.parseInt(fData.get(key));}
-    document.querySelector('form#config_form').addEventListener('submit', e => {
+    const form_el = document.querySelector('form#config_form');
+
+    let inject = (str, obj) => str.replace(/§{(.*?)}/g, (x,g)=> obj[g]);
+    let getAsInt = (fData, key) => Number.parseInt(fData.get(key));
+
+    const svg_el = document.querySelector('svg#svg_cross');
+    const path_el = document.querySelector('path.cross_path.not-selected');
+    const selected_el = document.querySelector('path.cross_path.selected');
+    const d_template = `
+    M-§{oh} §{oh}
+    v §{d} h §{o} v -§{d}
+    h §{r} v -§{o} h -§{r}
+    v -§{u} h -§{o} v §{u}
+    h -§{l} v §{o} h §{l}`;
+    const s_o_template = `
+    M -§{oh} §{oh}
+    m 0 §{d} h §{o}
+    m §{r} -§{d} v -§{o}
+    m -§{r} -§{u} h -§{o}
+    m -§{l} §{u} v §{o}`;
+    const s_u_template = `
+    M -§{oh} -§{oh}
+    v -§{u} m §{o} 0 v §{u}`;
+    const s_d_template = `
+    M -§{oh} §{oh}
+    v §{d} m §{o} 0 v -§{d}`;
+    const s_l_template = `
+    M -§{oh} -§{oh}
+    h -§{l} m 0 §{o} h §{l}`;
+    const s_r_template = `
+    M §{oh} -§{oh}
+    h §{r} m 0 §{o} h -§{r}`;
+    const s_off_template = `
+    M -§{oh} §{oh}
+    h §{off}`;
+    let selected = {name:"SHds"};
+    function syncSvg() {
+        let fdata = new FormData(form_el);
+        let fdatadict = {};
+        fdatadict.d = getAsInt(fdata, "SHds");
+        fdatadict.u = getAsInt(fdata, "SHts");
+        fdatadict.l = getAsInt(fdata, "SHls");
+        fdatadict.r = getAsInt(fdata, "SHrs");
+        fdatadict.o = getAsInt(fdata, "SHos");
+        fdatadict.oh = fdatadict.o / 2.0;
+        fdatadict.off = getAsInt(fdata, "SH_off");
+        path_el.setAttribute("d", inject(d_template, fdatadict));
+
+        let active_selected_template = "";
+        switch (selected.name) {
+            case "SHds":
+                active_selected_template = s_d_template;
+                break;
+            case "SHts":
+                active_selected_template = s_u_template;
+                break;
+            case "SHls":
+                active_selected_template = s_l_template;
+                break;
+            case "SHrs":
+                active_selected_template = s_r_template;
+                break;
+            case "SH_off":
+                active_selected_template = s_off_template;
+                break;
+            case "SHos":
+                active_selected_template = s_o_template;
+                break;
+            default:
+                active_selected_template = "";
+                break;
+        }
+
+        selected_el.setAttribute("d", inject(active_selected_template, fdatadict));
+
+        // adapt viewport
+        let baseDimension = Math.max(fdatadict.d, fdatadict.u, fdatadict.l, fdatadict.r) + fdatadict.o / 2 + 10;
+        svg_el.setAttribute("viewport", `-${baseDimension},-${baseDimension},${2*baseDimension},${2*baseDimension}`);
+    }
+    syncSvg();
+
+
+    form_el.addEventListener('submit', e => {
         const fdata = new FormData(e.target);
         e.preventDefault();
 
