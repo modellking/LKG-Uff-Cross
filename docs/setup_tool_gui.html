@@ -3,8 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>LKG-Uff-Cross Setup Tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="waterize_dark.css">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        [class*="col-"] {
+            float: left;
+            padding: 15px;
+        }
+
+        .col-1 {width: 8.33%;}
+        .col-2 {width: 16.66%;}
+        .col-3 {width: 25%;}
+        .col-4 {width: 33.33%;}
+        .col-5 {width: 41.66%;}
+        .col-6 {width: 50%;}
+        .col-7 {width: 58.33%;}
+        .col-8 {width: 66.66%;}
+        .col-9 {width: 75%;}
+        .col-10 {width: 83.33%;}
+        .col-11 {width: 91.66%;}
+        .col-12 {width: 100%;}
+
+        html {
+            font-family: "Lucida Sans", sans-serif;
+        }
+
+        .header {
+            background-color: #9933cc;
+            color: #ffffff;
+            padding: 15px;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu li {
+            padding: 8px;
+            margin-bottom: 7px;
+            background-color: #33b5e5;
+            color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .menu li:hover {
+            background-color: #0099cc;
+        }
+
         path {
             stroke:rgb(0,0,0);
             stroke-width:1;
@@ -15,6 +72,9 @@
         path.selected {
             stroke:rgb(255,0,0);
             stroke-width:1;
+        }
+        .full-width {
+            width: 100%;
         }
     </style>
 </head>
@@ -31,9 +91,10 @@
 
     After you've downloaded the file, put it next to esp_32_dmx_sk.ino file
 </p>
+<hr/>
 <form id="config_form">
-    <label>Basics:</label>
-    <label>How do you want to Address the Fixture?</label>
+    <h3>Basics:</h3>
+    <h4>How do you want to Address the Fixture?</h4>
     <div class="toggle">DMX Procedure and Two Buttons are explained in the manual</div>
     <input type="radio" id="in_field_none" name="USE_INFIELD_ADDRESSING" value="0" checked>
     <label for="in_field_none">Static Address</label><br/>
@@ -45,51 +106,54 @@
     <label for="in_field_dips">Dip Switches</label><br/>
 
     <div class="conditional" data-r-id="USE_INFIELD_ADDRESSING" data-r-value="0" data-r-operation="">
-    <label for="DMX_START_ADDRESS">Default DMX Address of the first channel (1 indexed):</label>
-    <div class="toggle">If you want to change the Address In-Field you can use any value here.
-        <br/>Addresses beyond 480 aren't correctly interpreted by the used break-detection.</div>
-    <input type="number" id="DMX_START_ADDRESS" name="DMX_START_ADDRESS" min="1" max="472" value="1">
+        <h4><label for="DMX_START_ADDRESS">Default DMX Address of the first channel (1 indexed):</label></h4>
+        <div class="toggle">If you want to change the Address In-Field you can use any value here.
+            <br/>Addresses beyond 480 aren't correctly interpreted by the used break-detection.</div>
+        <input type="number" id="DMX_START_ADDRESS" name="DMX_START_ADDRESS" min="1" max="472" value="1">
     </div>
 
-    <label for="LED_PIN">Select the Output Pin:</label>
+    <h4><label for="LED_PIN">Select the Output Pin:</label></h4>
     <div class="toggle">By GPIO number:
         <a href="https://content.instructables.com/ORIG/F14/JLPV/JQGYDSLJ/F14JLPVJQGYDSLJ.png">Pin Layout Reference</a></div>
     <input type="number" id="LED_PIN" name="LED_PIN" min="1" max="39" value="4">
 
-    <label for="T_DEADZONE_SIZE">How large should the Deadzone on the Time-Slider be:</label>
+    <h4><label for="T_DEADZONE_SIZE">How large should the Deadzone on the Time-Slider be:</label></h4>
     <input type="range" id="T_DEADZONE_SIZE" name="T_DEADZONE_SIZE" min="1" max="50" value="5">
 
-    <label>Shape</label>
-    <div>
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%"
-         viewBox="-50 -50 100 100" xml:space="preserve" id="svg_cross">
-        <path class="cross_path not-selected" d=""/>
-        <path class="cross_path selected" d=""/>
-        <foreignObject x="10" y="10" width="100" height="150">
-              <div xmlns="http://www.w3.org/1999/xhtml">
-              </div>
-        </foreignObject>
-    </svg>
+    <h3>Shape:</h3>
+    <p>LED counts in each section. Count only one of the marked Areas each! The Offset is how many LEDs down from the inner corner the LED-strip starts!</p>
+    <div class="row shape">
+        <div class="col-8">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%"
+                 viewBox="-50 -50 100 100" xml:space="preserve" id="svg_cross">
+                <path class="cross_path not-selected" d=""/>
+                <path class="cross_path selected" d=""/>
+            </svg>
+        </div>
+        <div class="col-4">
+            <label class="full-width" for="SHds">Lower Arm</label>
+            <input class="full-width " type="number" id="SHds" name="SHds" min="0" value="6">
+
+            <label class="full-width" for="SHts">Upper Arm</label>
+            <input class="full-width" type="number" id="SHts" name="SHts" min="0" value="2">
+
+            <label class="full-width" for="SHls">Left Arm</label>
+            <input class="full-width" type="number" id="SHls" name="SHls" min="0" value="3">
+
+            <label class="full-width" for="SHrs">Right Arm</label>
+            <input class="full-width" type="number" id="SHrs" name="SHrs" min="0" value="3">
+
+            <label class="full-width" for="SHos">Arm width</label>
+            <input class="full-width" type="number" id="SHos" name="SHos" min="0" value="2">
+
+            <label class="full-width" for="SH_off">LED strip start Offset</label>
+            <input class="full-width" type="number" id="SH_off" name="SH_off" min="0" value="0">
+        </div>
     </div>
-
-    <label for="SHds">down</label>
-    <input type="number" id="SHds" name="SHds" min="0" value="6">
-    <label for="SHls">left</label>
-    <input type="number" id="SHls" name="SHls" min="0" value="3">
-    <label for="SHts">top</label>
-    <input type="number" id="SHts" name="SHts" min="0" value="2">
-    <label for="SHrs">right</label>
-    <input type="number" id="SHrs" name="SHrs" min="0" value="3">
-    <label for="SHos">out</label>
-    <input type="number" id="SHos" name="SHos" min="0" value="2">
-    <label for="SH_off">Offset</label>
-    <input type="number" id="SH_off" name="SH_off" min="0" value="0">
-
-
     <!--<label>Advanced</label>-->
 
 
-    <input type="submit" value="Generate & Download!">
+    <input type="submit" value="Generate & Download!" style="width: 100%">
 </form>
 <script src="FileSaver.js"></script>
 <script>
@@ -100,7 +164,13 @@
 
     const svg_el = document.querySelector('svg#svg_cross');
     const path_el = document.querySelector('path.cross_path.not-selected');
-    const selected_el = document.querySelector('path.cross_path.selected');
+    const selected_path_el = document.querySelector('path.cross_path.selected');
+
+    const shape_inputs = document.querySelectorAll(".shape>div>input");
+    const shape_offset_input = document.querySelector("input#SH_off");
+
+    let selectedInput = {name:""};
+
     const d_template = `
     M-§{oh} §{oh}
     v §{d} h §{o} v -§{d}
@@ -127,8 +197,23 @@
     h §{r} m 0 §{o} h -§{r}`;
     const s_off_template = `
     M -§{oh} §{oh}
-    h §{off}`;
-    let selected = {name:"SHds"};
+    m 0 §{off} h 0.00001`;
+
+    let select_callback = (e) => {
+        selectedInput = e.target;
+        syncSvg();
+    };
+    shape_inputs.forEach((el) => {
+        el.addEventListener("focus", select_callback);
+        el.addEventListener("change", select_callback);
+        el.addEventListener("mouseenter", select_callback);
+    });
+
+    function restrictOffsetTo(max, is) {
+        shape_offset_input.setAttribute("max", ""+max);
+        if (is > max)
+            shape_offset_input.value = max;
+    }
     function syncSvg() {
         let fdata = new FormData(form_el);
         let fdatadict = {};
@@ -142,9 +227,10 @@
         path_el.setAttribute("d", inject(d_template, fdatadict));
 
         let active_selected_template = "";
-        switch (selected.name) {
+        switch (selectedInput.name) {
             case "SHds":
                 active_selected_template = s_d_template;
+                restrictOffsetTo(fdatadict.d, fdatadict.off);
                 break;
             case "SHts":
                 active_selected_template = s_u_template;
@@ -157,6 +243,7 @@
                 break;
             case "SH_off":
                 active_selected_template = s_off_template;
+                restrictOffsetTo(fdatadict.d, fdatadict.off);
                 break;
             case "SHos":
                 active_selected_template = s_o_template;
@@ -166,7 +253,7 @@
                 break;
         }
 
-        selected_el.setAttribute("d", inject(active_selected_template, fdatadict));
+        selected_path_el.setAttribute("d", inject(active_selected_template, fdatadict));
 
         // adapt viewport
         let linewidthAndPuffer = 2;
