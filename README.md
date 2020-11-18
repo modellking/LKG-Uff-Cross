@@ -1,5 +1,5 @@
 # LKG-Uff-Cross
-A DMX-to-SK6812 Controller written in C++ using Arduino
+A DMX-to-SK6812 Controller written in C++ using Arduino (for the ESP-32)
 
 ## Features
 - 6 Effects,
@@ -7,6 +7,7 @@ A DMX-to-SK6812 Controller written in C++ using Arduino
 - 8-channel controlability (even with the specific dirt cheap and not user friendly dmx-panal we use)
 
 ## To set up:
+Expect about 2 days of work to set this up for a normal sized cross. We (2 men) took 2 evenings á 4 hours to solder the strip and secure the hardware. Software should be doable with in an hour
 ### Hardware:
 #### You need:
 - ESP-32 (I used the Dev-Module)
@@ -20,12 +21,14 @@ A DMX-to-SK6812 Controller written in C++ using Arduino
 5. Connect everythings corresponding Ground and 5V to a powersupply (some ESP-32 Dev Boards can use USB-power, others need 3.3V - adapt as required)
 
 ### Software:
-1. Follow instructions to setup the Arduino IDE for an ESP-32:
-https://github.com/espressif/arduino-esp32
-2. Clone the project in a folder named "esp_32_dmx_sk"
-3. Open the cloned project as a Arduino project (esp_32_dmx_sk.ino is the main project file)
-4. Adapt as you wish!
-5. Flash to ESP-32 (if you are new: do not forget to hold the BOOT button, if your board has one)
+1. Download the Arduino IDE: https://www.arduino.cc/en/software (No you cannot use the online version)
+2. Follow instructions to setup the Arduino IDE for an ESP-32: https://github.com/espressif/arduino-esp32
+3. Download and unpack this project https://github.com/modellking/LKG-Uff-Cross/archive/main.zip (Release Folder will come)
+4. Generate and download a configuration file with this tool https://modellking.github.io/LKG-Uff-Cross/setup_tool_gui.html
+5. Place the configuration file in /esp_32_dmx_sk/
+6. Open the cloned project as a Arduino project (esp_32_dmx_sk.ino is the main project file)
+7. Adapt as/if you wish!
+8. Flash to ESP-32 (if you are new: do not forget to hold the BOOT button, if your board has one)
 
 ## Thanks to
 uses in adapted form
