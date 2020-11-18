@@ -53,7 +53,7 @@ void setup() {
 void noop() {}
 
 void (*effects[])(void) = { // todo: fade/strobe, Directions
-  full, simple_snakes, hue_rotate, inOut, noop, noop, sparkle, fire, noop
+  full, simple_snakes, hue_rotate, inOut, noop, noop, sparkle, noop, noop
 };
 
 int readcycle = 0;
