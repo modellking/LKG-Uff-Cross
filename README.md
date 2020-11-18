@@ -24,7 +24,7 @@ Expect about 2 days of work to set this up for a normal sized cross. We (2 men) 
 1. Download the Arduino IDE: https://www.arduino.cc/en/software (No you cannot use the online version)
 2. Follow instructions to setup the Arduino IDE for an ESP-32: https://github.com/espressif/arduino-esp32
 3. Download and unpack this project https://github.com/modellking/LKG-Uff-Cross/archive/main.zip (Release Folder will come)
-4. Generate and download a configuration file with this tool modellking.github.io/LKG-Uff-Cross/setup_tool_gui.html
+4. Generate and download a configuration file with this tool https://modellking.github.io/LKG-Uff-Cross/setup_tool_gui.html
 5. Place the configuration file in /esp_32_dmx_sk/
 6. Open the cloned project as a Arduino project (esp_32_dmx_sk.ino is the main project file)
 7. Adapt as/if you wish!
