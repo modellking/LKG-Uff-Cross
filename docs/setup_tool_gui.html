@@ -169,8 +169,13 @@
         selected_el.setAttribute("d", inject(active_selected_template, fdatadict));
 
         // adapt viewport
-        let baseDimension = Math.max(fdatadict.d, fdatadict.u, fdatadict.l, fdatadict.r) + fdatadict.o / 2 + 10;
-        svg_el.setAttribute("viewport", `-${baseDimension},-${baseDimension},${2*baseDimension},${2*baseDimension}`);
+        let linewidthAndPuffer = 2;
+        let minh = fdatadict.d + fdatadict.u;
+        let minw = fdatadict.l + fdatadict.r;
+        let baseDimension = Math.max(minh, minw) + fdatadict.o + linewidthAndPuffer;
+        let xoffset = fdatadict.l + (baseDimension - minw) / 2.0;
+        let yoffset = fdatadict.u + (baseDimension - minh) / 2.0;
+        svg_el.setAttribute("viewBox", `-${xoffset},-${yoffset},${baseDimension},${baseDimension}`);
     }
     syncSvg();
 
