@@ -16,9 +16,10 @@ Expect about 2 days of work to set this up for a normal sized cross. We (2 men) 
 #### Setup:
 1. Connect the DMX D+ / D- / Ground to the MAX-485 A / B / Ground (if D+ / D- to A / B get mixed up try the other way around)
 2. Bridge !RX_enable and TX_enable from the MAX-485 to Ground
-3. Connect the RX to pin 16 (UART-2 RX) on the ESP-32
-4. Connect a pin (4 by default) of the ESP-32 to the first SK-6812 DI
+3. Connect the RX to pin 16 (UART-2 RX) on the ESP-32. (To change use another UART2 RX enabled pin and edit dmx.cpp:3 later)
+4. Connect a pin (4 by default) of the ESP-32 to the first SK-6812 DI (Unmodified the Code only works if the start of the strip is somewhere on the left side of the lower arm (viewed from the front))
 5. Connect everythings corresponding Ground and 5V to a powersupply (some ESP-32 Dev Boards can use USB-power, others need 3.3V - adapt as required)
+To identify the pins on the ESP-32 you might want to look at this: https://content.instructables.com/ORIG/F14/JLPV/JQGYDSLJ/F14JLPVJQGYDSLJ.png
 
 ### Software:
 1. Download the Arduino IDE: https://www.arduino.cc/en/software (No you cannot use the online version)
