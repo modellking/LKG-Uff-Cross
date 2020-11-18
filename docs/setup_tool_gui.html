@@ -2,10 +2,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
+    <title>LKG-Uff-Cross Setup Tool</title>
 </head>
 <body>
-<p>does this work?</p>
-<script>alert("YES!")</script>
+<p>Welcome to the setup tool!
+    <br/>This page will guide you through the setup process of the cross project.
+    <ul>
+      <li></li>
+      <li>Download the <a href="">Source Files</a></li>
+      <li>Then you can fill out the Form below to generate a configuration file</li>
+      <li>Place the configuration file in /esp_32_dmx_sk/ (the folder )</li>
+    </ul>
+    This page will guide you through the creation of a configuration file to customize your installation of the cross project.
+    This page will create configurations for the Current Beta Version as of 18 Nov 2020.
+    pins: https://content.instructables.com/ORIG/F14/JLPV/JQGYDSLJ/F14JLPVJQGYDSLJ.png
+    The DMX Serial Input Pin is pin 16 (to change use another UART2 RX enabled pin and edit dmx.cpp:3
+    Assumes the Start is somewhere on the left side of the lower arm going counter-clockwise around the cross (from the front)
+
+    After you've downloaded the file, put it next to esp_32_dmx_sk.ino file
+</p>
+<form>
+    <label>Basics:</label>
+    <label>How do you want to Address the Fixture?</label>
+    <div class="toggle">DMX Procedure and Two Buttons are explained in the manual</div>
+    <input type="radio" id="in_field_none" name="USE_INFIELD_ADDRESSING" value="0" checked>
+    <label for="in_field_none">Static Address</label><br>
+    <input type="radio" id="in_field_dmx" name="USE_INFIELD_ADDRESSING" value="1">
+    <label for="in_field_dmx">DMX Procedure</label><br>
+    <input type="radio" id="in_field_btns" name="USE_INFIELD_ADDRESSING" value="2">
+    <label for="in_field_btns">Two Buttons</label>
+    <input type="radio" id="in_field_dips" name="USE_INFIELD_ADDRESSING" value="3">
+    <label for="in_field_dips">Dip Switches</label>
+
+    <div class="conditional" data-r-id="USE_INFIELD_ADDRESSING" data-r-value="0" data-r-operation="">
+    <label for="DMX_START_ADDRESS">Default DMX Address of the first channel (1 indexed):</label>
+    <div class="toggle">If you want to change the Address In-Field you can use any value here.
+        <br/>Addresses beyond 480 aren't correctly interpreted by the used break-detection.</div>
+    <input type="number" id="DMX_START_ADDRESS" name="Start_Address" min="1" max="472" value="1">
+    </div>
+
+    <label for="LED_PIN">Select the Output Pin:</label>
+    <div class="toggle">By GPIO number:
+        <a href="https://content.instructables.com/ORIG/F14/JLPV/JQGYDSLJ/F14JLPVJQGYDSLJ.png">Pin Layout Reference</a></div>
+    <input type="number" id="LED_PIN" name="Led_Pin" min="1" max="39" value="4">
+
+    <label for="T_DEADZONE_SIZE">How large should the Deadzone on the Time-Slider be:</label>
+    <input type="range" id="T_DEADZONE_SIZE" name="T_Deadzone" min="1" max="50" value="5">
+
+    <label>Shape</label>
+
+    <label for="SHds">down</label>
+    <input type="number" id="SHds" name="shape_down" min="0" value="6">
+    <label for="SHls">left</label>
+    <input type="number" id="SHls" name="shape_left" min="0" value="3">
+    <label for="SHts">top</label>
+    <input type="number" id="SHts" name="shape_top" min="0" value="2">
+    <label for="SHrs">right</label>
+    <input type="number" id="SHrs" name="shape_right" min="0" value="3">
+    <label for="SHos">out</label>
+    <input type="number" id="SHos" name="shape_out" min="0" value="2">
+    <label for="SH_off">Offset</label>
+    <input type="number" id="SH_off" name="shape_offset" min="0" value="0">
+
+
+    <!--<label>Advanced</label>-->
+
+
+    <input type="button" onclick="generateConfigFile()" value="Click Me!">
+</form>
+<script src="FileSaver.js"></script>
+<script>
+    document.addEventListener("load", e=>{
+        
+    });
+
+    function generateConfigFile() {
+        let template =
+```
+#ifndef PRE_CPP
+#define PRE_CPP 1
+
+#define DMX_START_ADDRESS ${DMX_START_ADDRESS}
+#define USE_INFIELD_ADDRESSING ${USE_INFIELD_ADDRESSING}
+#define LED_COUNT ${LED_COUNT}
+#define LED_PIN ${LED_PIN}
+
+#define T_DEADZONE_SIZE ${T_DEADZONE_SIZE}
+
+#define SHds ${SHds}
+#define SHls ${SHls}
+#define SHts ${SHts}
+#define SHrs ${SHrs}
+#define SHos ${SHos}
+#define SH_off ${SH_off}
+
+#define POLLRATE 30
+#define UPDATETIME 10
+#define T_MAX (LED_COUNT * 64)
+#define COLOR_SLOT_COUNT 4
+
+#define DEBUG 1
+
+#endif
+```;
+        let blob = new Blob([template], {type: "text/x-c;charset=utf-8"});
+        saveAs(blob, "preferences.cpp");
+    }
+</script>
 </body>
 </html>
