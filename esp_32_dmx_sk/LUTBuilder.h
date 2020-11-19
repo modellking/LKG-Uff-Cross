@@ -16,11 +16,13 @@ class LUTBuilder {
         lut[i] = descriptor[i];
   }
   
-  void addDescriptor(int (*descriptor)(int), int sstart = -1, int eend = -1, int iteratorOffset = 0) {
+  void addDescriptor(int (*descriptor)(int), int sstart = -1, int eend = -1, int iteratorStart = -1) {
     if (sstart == -1) sstart = start;
     if (eend == -1) eend = end;
     prepFor(sstart,eend);
-    for (int i = sstart; i < eend; i++) lut[i] = descriptor(i-iteratorOffset);
+    if (iteratorStart == -1) iteratorStart = sstart;
+    int offset = iteratorStart - sstart;
+    for (int i = sstart; i < eend; i++) lut[i] = descriptor(i + offset);
   }
   
   void addDescriptor(LUTBuilder * descriptor, int sstart = -1, int eend = -1) {
