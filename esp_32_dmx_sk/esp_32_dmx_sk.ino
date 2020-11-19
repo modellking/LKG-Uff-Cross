@@ -40,10 +40,19 @@ double timescale_lookup(byte ts) {
   return 0.0003 * (ts-127-T_DEADZONE_SIZE) * (ts-127-T_DEADZONE_SIZE);
 }
 
+void (*effect_inits[])(void) = {
+  shapeInit
+};
+
 void setup() {
   strip.begin(LED_PIN,LED_COUNT); // pin, LED_count
   DMX::Initialize();
   Serial.begin(115200);
+
+  int effect_inits_len = sizeof(effect_inits) / sizeof(effect_inits[0]);
+  for (int i = 0; i < effect_inits_len; i++) {
+    effect_inits[i]();
+  }
 
 #if USE_INFIELD_ADDRESSING
   start_address = fetchDmxStartAddress();
