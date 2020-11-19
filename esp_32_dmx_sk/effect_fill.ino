@@ -12,6 +12,15 @@ void fill_rgbw_between(RGBW rgbw, int start, int limit) {
   }
 }
 
+void feathered_fill(RGBW rgbw, float start, float limit, RGBW background) {
+  fill_rgbw_between(rgbw, start +1, limit-1);
+  int int_start = start;
+  int int_limit = limit;
+  
+  strip.color32(int_start, Color::rgbwToBits(Color::mixRgbw(rgbw, background, start - int_start)));
+  strip.color32(int_limit, Color::rgbwToBits(Color::mixRgbw(rgbw, background, limit - int_limit)));
+}
+
 void hue_rotate() {
   byte divisions = 3;
   int short_t = t / 16;
