@@ -53,7 +53,7 @@ class LUTBuilder {
   void printDebug() {
 #if DEBUG
     for (int i = 0; i < size(); i++) {
-      Serial.print(i + ":" + String(lut[i], DEC) + " ");
+      Serial.print(String(i, DEC) + ":" + String(lut[i], DEC) + " ");
       if (i%8 == 7) {
         Serial.println("");
       }
