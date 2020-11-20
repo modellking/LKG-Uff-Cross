@@ -41,13 +41,15 @@ double timescale_lookup(byte ts) {
 }
 
 void (*effect_inits[])(void) = {
-  shapeInit
+  shapeInit, inOutSetup
 };
 
 void setup() {
   strip.begin(LED_PIN,LED_COUNT); // pin, LED_count
   DMX::Initialize();
+#if DEBUG
   Serial.begin(115200);
+#endif
 
   int effect_inits_len = sizeof(effect_inits) / sizeof(effect_inits[0]);
   for (int i = 0; i < effect_inits_len; i++) {

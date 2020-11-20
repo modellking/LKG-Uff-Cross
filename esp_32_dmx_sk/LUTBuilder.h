@@ -50,6 +50,18 @@ class LUTBuilder {
     return lut.size();
   }
 
+  void printDebug() {
+#if DEBUG
+    for (int i = 0; i < size(); i++) {
+      Serial.print(i + ":" + String(lut[i], DEC) + " ");
+      if (i%8 == 7) {
+        Serial.println("");
+      }
+    }
+    Serial.println("");
+#endif
+  }
+
   private:
   void prepFor(int sstart, int eend) {
     int enddiff = end - eend;
