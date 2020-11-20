@@ -33,7 +33,7 @@ void snakes() {
   } else if (LED_COUNT - argu * colorsSize < 2) {
     // todo this doesn't interpolate! (If you must interpolate only one snake with the next as background)
     for (int i = 0; i < colorsSize; i++) {
-      simple_snake(colors[i], argu, i * LED_COUNT / colorsSize);
+      simple_snake(colors[i], LED_COUNT / colorsSize, i * LED_COUNT / colorsSize);
     }
   } else {
     for (int i = 0; i < colorsSize; i++) {
