@@ -1,4 +1,9 @@
 #include "dmx.h"
+#include "utility.h"
+#include "preferences.h"
+
+#if DEBUG
+#else
 
 #define DMX_SERIAL_INPUT_PIN    16          // pin for dmx rx
 #define DMX_SERIAL_OUTPUT_PIN   17          // pin for dmx tx
@@ -18,16 +23,15 @@ SemaphoreHandle_t DMX::sync_dmx;
 
 uint8_t DMX::dmx_state = DMX_IDLE;
 
+bool DMX::changed_state = false;
+
 uint16_t DMX::current_rx_addr = 0;
 
 long DMX::last_dmx_packet = 0;
 
 uint8_t DMX::dmx_data[513];
 
-DMX::DMX()
-{
-
-}
+DMX::DMX(){}
 
 void DMX::Initialize()
 {
@@ -59,14 +63,7 @@ void DMX::Initialize()
 uint8_t DMX::Read(uint16_t channel)
 {
     // restrict acces to dmx array to valid values
-    if(channel < 1)
-    {
-        channel = 1;
-    }
-    else if(channel > 512)
-    {
-        channel = 512;
-    }
+    CLAMP(channel, 1, 512);
     // take data threadsafe from array and return
     xSemaphoreTake(sync_dmx, portMAX_DELAY);
     uint8_t tmp_dmx = dmx_data[channel];
@@ -81,11 +78,13 @@ uint8_t DMX::IsHealthy()
     long dmx_timeout = last_dmx_packet;
     xSemaphoreGive(sync_dmx);
     // check if elapsed time < defined timeout
-    if(xTaskGetTickCount() - dmx_timeout < HEALTHY_TIME)
-    {
-        return 1;
-    }
-    return 0;
+    return xTaskGetTickCount() - dmx_timeout < HEALTHY_TIME;
+}
+
+bool DMX::HasChanged() {
+  bool local_copy = changed_state;
+  changed_state = false;
+  return local_copy;
 }
 
 void DMX::uart_event_task(void *pvParameters)
@@ -154,3 +153,4 @@ void DMX::uart_event_task(void *pvParameters)
         }
     }
 }
+#endif

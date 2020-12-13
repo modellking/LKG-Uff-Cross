@@ -2,7 +2,7 @@
 #define SH_H 1
 
 #include "LUTBuilder.h"
-#include "preferences.cpp"
+#include "preferences.h"
 
 const int sh_order[] = { SHds-SH_off, SHos, SHds, \
   SHrs, SHos, SHrs, \

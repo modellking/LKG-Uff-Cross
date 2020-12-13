@@ -1,17 +1,19 @@
-#include "preferences.cpp"
+#include "preferences.h"
+#include "utility.h"
 #include "sk.h"
-#include "dmx.h"
+
 #include "Color.h"
 #include "LUTBuilder.h"
 #include "shape.h"
 
-#ifdef DEBUG
+#if DEBUG
 #define DMX_START_ADDRESS 1
 #endif
+#include "dmx.h"
+
 #if USE_INFIELD_ADDRESSING
 #include "inFieldAddressing.cpp"
 #endif
-#define SIZEOF(a) sizeof(a)/sizeof(*a)
 
 auto strip = sk();
 
@@ -27,7 +29,7 @@ RGBW color_slots[COLOR_SLOT_COUNT];
 byte argument_slots[COLOR_SLOT_COUNT];
 
 double timescale_lookup(byte ts) {
-  // maps ts from 0_255 to about -3.0_3.0 with a deadzone and catching 0;
+  // maps ts from 0..255 to about -3.0..3.0 with a deadzone and passing through 0;
   if (ts == 0) {
     return 0.0;
   }
@@ -45,11 +47,11 @@ void (*effect_inits[])(void) = {
 };
 
 void setup() {
-  strip.begin(LED_PIN,LED_COUNT); // pin, LED_count
-  DMX::Initialize();
 #if DEBUG
   Serial.begin(115200);
 #endif
+  strip.begin(LED_PIN,LED_COUNT); // pin, LED_count
+  DMX::Initialize();
 
   int effect_inits_len = sizeof(effect_inits) / sizeof(effect_inits[0]);
   for (int i = 0; i < effect_inits_len; i++) {
@@ -66,7 +68,7 @@ void noop() {}
 void (*effects[])(void) = { // todo: fade/strobe, Directions
   full, snakes, hue_rotate, inOut, noop, noop, sparkle, noop, noop // last reserved for update_lock
 };
-const byte effectCount =  sizeof(effects) / sizeof(effects[0]);
+const byte effectCount =  SIZEOF(effects);
 
 int readcycle = 0;
 int writecycle = 0;
@@ -82,7 +84,7 @@ void loop() {
   if (rdiff > POLLRATE) {
     readcycle = millis();
     
-    if(DMX::IsHealthy())
+    if(DMX::HasChanged())
     {
       byte raw_col_slot = DMX::Read(start_address+7);
       byte raw_effect = DMX::Read(start_address+4);
@@ -100,13 +102,13 @@ void loop() {
             color_slots[i] = Color::getBlack();
 
         if (raw_col_slot != 255) {
-          color_slot = segb(raw_col_slot, COLOR_SLOT_COUNT);
+          color_slot = SEGB(raw_col_slot, COLOR_SLOT_COUNT);
           color_slots[color_slot].r = DMX::Read(start_address);
           color_slots[color_slot].g = DMX::Read(start_address+1);
           color_slots[color_slot].b = DMX::Read(start_address+2);
           color_slots[color_slot].w = DMX::Read(start_address+3);
         }
-        effect = segb(raw_effect, effectCount);
+        effect = SEGB(raw_effect, effectCount);
         timescale = timescale_lookup(DMX::Read(start_address+5));
         
         argument_slots[color_slot] = DMX::Read(start_address+6);
@@ -119,7 +121,8 @@ void loop() {
       }
       Serial.println("");
 #endif
-    } else {
+    }
+    if (!DMX::IsHealthy()) {
       fill_rgbw(Color::getBlack());
     }
     strip.show();

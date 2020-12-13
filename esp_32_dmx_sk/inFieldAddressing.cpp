@@ -2,7 +2,7 @@
 #define IFA_CPP 1
 
 #include <EEPROM.h>
-#include "preferences.cpp"
+#include "preferences.h"
 
 
 int fetchDmxStartAddress() {
