@@ -1,4 +1,7 @@
-
+.pio
+CMakeListsPrivate.txt
+cmake-build-*/ 
 docs/.idea
-esp_32_dmx_sk/preferences.cpp
+src/preferences.cpp
+src/preferences.h
 *.log
