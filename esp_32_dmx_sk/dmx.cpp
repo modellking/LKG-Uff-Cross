@@ -63,7 +63,7 @@ void DMX::Initialize()
 uint8_t DMX::Read(uint16_t channel)
 {
     // restrict acces to dmx array to valid values
-    CLAMP(channel, 1, 512);
+    std::clamp(channel, 1, 512);
     // take data threadsafe from array and return
     xSemaphoreTake(sync_dmx, portMAX_DELAY);
     uint8_t tmp_dmx = dmx_data[channel];

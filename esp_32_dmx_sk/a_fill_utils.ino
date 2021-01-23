@@ -17,6 +17,12 @@ void fill_rgbw_between_wrapping(RGBW rgbw, int start, int limit) {
   }
 }
 
+RGBW mix_on_background(RGBW back, RGBW a, float ar, RGBW b, float br) {
+  RGBW amix = Color::mixRgbw(back, a, ar);
+  RGBW bmix = Color::mixRgbw(back, b, br);
+  return Color::mixRgbw(amix, bmix, ar - br/2);
+}
+
 /**
  * todo subpixel interpolation below 2 length becomes weird!
  */
@@ -34,5 +40,7 @@ void feathered_wraping_fill(RGBW rgbw, float start, float limit, RGBW background
 
     strip.color32(int_start, Color::rgbwToBits(Color::mixRgbw(background, rgbw, start - int_start)));
     strip.color32(int_limit, Color::rgbwToBits(Color::mixRgbw(rgbw, background, limit - int_limit)));
+  } else if (dif > 1) {
+    strip.color32(int_start, Color::rgbwToBits(mix_on_background(background, rgbw, start - int_start, rgbw, (1 - limit + int_limit))));
   }
 }

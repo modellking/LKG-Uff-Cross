@@ -3,6 +3,7 @@
 
 #include "LUTBuilder.h"
 #include "preferences.h"
+#include "utility.h"
 
 const int sh_order[] = { SHds-SH_off, SHos, SHds, \
   SHrs, SHos, SHrs, \
@@ -10,7 +11,7 @@ const int sh_order[] = { SHds-SH_off, SHos, SHds, \
   SHls, SHos, SHls, \
   SH_off
 };
-int sh_sum[sizeof(sh_order) / sizeof(sh_order[0])];
+int sh_sum[SIZEOF(sh_order)];
 
 LUTBuilder maskb, maskr, maskt, maskl;
 
@@ -30,4 +31,18 @@ void shapeInit() {
   
   maskl.addDescriptor(1, sh_sum[8], sh_sum[11]-1);
 }
+
+class Pointf {
+  public:
+      float x, y;
+      Point() : x(0f), y(0f) {}
+      Point(float x, float y) : x(x), y(y) {}
+}
+
+static Pointf[] shapePoints = SHAPEPOINTS;
+
+static (void (*)(void)) shapeEffectToEffect(float (*shape) (float,float,float)) {
+  
+}
+
 #endif

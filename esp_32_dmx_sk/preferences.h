@@ -16,6 +16,8 @@
 #define SHos 2
 #define SH_off 0
 
+#define SHAPEPOINTS {}
+
 #define POLLRATE 30
 #define UPDATETIME 10
 #define T_MAX (LED_COUNT * 64)

@@ -15,6 +15,8 @@
 #include "inFieldAddressing.cpp"
 #endif
 
+#define SEGB(x, seg) x * seg / 256
+
 auto strip = sk();
 
 int start_address = DMX_START_ADDRESS;
@@ -53,7 +55,7 @@ void setup() {
   strip.begin(LED_PIN,LED_COUNT); // pin, LED_count
   DMX::Initialize();
 
-  int effect_inits_len = sizeof(effect_inits) / sizeof(effect_inits[0]);
+  int effect_inits_len = SIZEOF(effect_inits);
   for (int i = 0; i < effect_inits_len; i++) {
     effect_inits[i]();
   }
